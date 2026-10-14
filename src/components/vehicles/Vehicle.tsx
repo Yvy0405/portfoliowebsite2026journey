@@ -1,5 +1,5 @@
 import type { MotionValue } from 'motion/react';
-import type { VehicleKind } from '../../content/journey';
+import type { VehicleKind } from '../../content/story';
 import { Airplane } from './Airplane';
 import { Bus } from './Bus';
 import { Car } from './Car';

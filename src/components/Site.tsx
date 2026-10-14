@@ -1,26 +1,19 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useMotionValueEvent, useScroll } from 'motion/react';
-import { chapters } from '../content/journey';
+import { person } from '../content/portfolio';
+import { stops } from '../content/story';
 import { usePrefersReducedMotion } from '../hooks/useMediaQuery';
 import { useDialog } from '../lib/dialog';
-import {
-  AboutDest,
-  AwardsDest,
-  ChapterDest,
-  ContactDest,
-  destinations,
-  EducationDest,
-  JourneyDest,
-  WorkDest,
-} from './Destinations';
-import { Header } from './Header';
 import { RouteBar } from './RouteBar';
+import { StopView } from './Stops';
+
+const destinations = stops;
 
 /** Easing factor for wheel / programmatic movement (per animation frame). */
 const EASE = 0.16;
 
 /**
- * The whole site is one horizontal track inside a full-viewport scroller.
+ * The whole site is one continuous horizontal story inside a full-viewport scroller.
  * The page never scrolls vertically.
  *
  * Input handling (all moving the same native scrollLeft, so nothing is counted twice):
@@ -288,24 +281,34 @@ export function Site() {
     }
   }, []);
 
-  const setRef = (i: number) => (el: HTMLElement | null) => {
-    destRefs.current[i] = el;
-  };
-  let n = 0;
-
   return (
     <div className="site">
-      <Header active={destinations[active].id} onNavigate={goTo} />
-      <main id="content" className="scroller" ref={scrollerRef} tabIndex={-1} aria-label="Portfolio — scrolls horizontally">
-        <AboutDest ref={setRef(n++)} onNavigate={goTo} />
-        <JourneyDest ref={setRef(n++)} onNavigate={goTo} />
-        {chapters.map((c, i) => (
-          <ChapterDest key={c.id} ref={setRef(n++)} chapter={c} index={i} />
+      <header className="topbar">
+        <a className="skip-link" href="#today">
+          Skip to contact
+        </a>
+        <button type="button" className="logo" onClick={() => goTo(0)} aria-label={`${person.fullName} — back to start`}>
+          <span className="logo-mark" aria-hidden="true">
+            {person.logoMark}
+          </span>
+          <span className="logo-text">{person.fullName}</span>
+        </button>
+        <p className="topbar-count" aria-hidden="true">
+          <strong>{String(active).padStart(2, '0')}</strong> / {String(destinations.length - 1).padStart(2, '0')}
+        </p>
+      </header>
+      <main id="content" className="scroller" ref={scrollerRef} tabIndex={-1} aria-label="Portfolio journey — scrolls horizontally">
+        {stops.map((s, i) => (
+          <StopView
+            key={s.id}
+            ref={(el) => {
+              destRefs.current[i] = el;
+            }}
+            stop={s}
+            index={i}
+            onNavigate={goTo}
+          />
         ))}
-        <WorkDest ref={setRef(n++)} />
-        <AwardsDest ref={setRef(n++)} />
-        <EducationDest ref={setRef(n++)} />
-        <ContactDest ref={setRef(n++)} onNavigate={goTo} />
       </main>
       <RouteBar active={active} offsets={offsets} viewW={viewW} scrollX={scrollX} onNavigate={goTo} />
     </div>
