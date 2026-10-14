@@ -5,17 +5,18 @@ type Props = {
   to: string | 'present';
   /** Activity ids to show. Defaults to every activity overlapping the window. */
   ids?: string[];
-  caption?: string;
+  title?: string;
   className?: string;
   /** Explain the bar styles (year-only dates, unspecified dates, ongoing). */
   legend?: boolean;
 };
 
 /**
- * Compact parallel-lane timeline. Each activity gets its own row so concurrent
- * work, study and venture read as overlapping bars rather than a sequence.
+ * Parallel-lane timeline. Each activity gets its own row (name + exact source
+ * date on the left, bar on the right) so concurrent work, study and venture
+ * read as overlapping bars rather than a forced sequence.
  */
-export function TimelineLanes({ from, to, ids, caption, className, legend }: Props) {
+export function TimelineLanes({ from, to, ids, title, className, legend }: Props) {
   const start = toMonths(from);
   const end = toMonths(to === 'present' ? currentYM() : to) + 1;
   const range = end - start;
@@ -31,44 +32,54 @@ export function TimelineLanes({ from, to, ids, caption, className, legend }: Pro
 
   return (
     <figure className={`lanes ${className ?? ''}`}>
-      {caption && <figcaption className="lanes-caption">{caption}</figcaption>}
-      <ul className="lanes-rows">
-        {list.map((a) => {
-          const s = spanOf(a)!;
-          const left = pct(s.start);
-          const ongoing = a.end === 'present';
-          return (
-            <li key={a.id} className={`lanes-row lane-${a.lane}`}>
-              <span className="lanes-label">
-                {a.label}
-                <span className="sr-only">
-                  {' '}({laneLabels[a.lane]}): {a.dateLabel}
-                </span>
-              </span>
-              <span className="lanes-track" aria-hidden="true">
-                {a.point ? (
-                  <span className="lanes-point" style={{ left }} title={`${a.label} · ${a.dateLabel}`} />
-                ) : (
-                  <span
-                    className={`lanes-bar${a.precision === 'unspecified' ? ' is-unspecified' : ''}${a.precision === 'year' ? ' is-year' : ''}${ongoing ? ' is-ongoing' : ''}`}
-                    style={{ left, width: `calc(${pct(s.end)} - ${left})` }}
-                    title={`${a.label} · ${a.dateLabel}`}
-                  />
-                )}
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-      <div className="lanes-axis" aria-hidden="true">
-        <span className="lanes-label" />
-        <span className="lanes-track">
+      {title && <figcaption className="lanes-title">{title}</figcaption>}
+      <div className="lanes-body">
+        <div className="lanes-grid" aria-hidden="true">
           {years.map((y) => (
-            <span key={y} className="lanes-tick" style={{ left: pct(y * 12) }}>
-              {y}
-            </span>
+            <span key={y} style={{ left: pct(y * 12) }} />
           ))}
-        </span>
+        </div>
+        <ul className="lanes-rows">
+          {list.map((a) => {
+            const s = spanOf(a)!;
+            const left = pct(s.start);
+            const ongoing = a.end === 'present';
+            const cls = [
+              'lanes-bar',
+              a.precision === 'unspecified' && 'is-unspecified',
+              a.precision === 'year' && 'is-year',
+              ongoing && 'is-ongoing',
+            ]
+              .filter(Boolean)
+              .join(' ');
+            return (
+              <li key={a.id} className={`lanes-row lane-${a.lane}`}>
+                <span className="lanes-label">
+                  <span className="lanes-name">{a.label}</span>
+                  <span className="lanes-date">{a.dateLabel}</span>
+                  <span className="sr-only"> ({laneLabels[a.lane]})</span>
+                </span>
+                <span className="lanes-track" aria-hidden="true">
+                  {a.point ? (
+                    <span className="lanes-point" style={{ left }} />
+                  ) : (
+                    <span className={cls} style={{ left, width: `calc(${pct(s.end)} - ${left})` }} />
+                  )}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="lanes-axis" aria-hidden="true">
+          <span />
+          <span className="lanes-track">
+            {years.map((y) => (
+              <span key={y} className="lanes-tick" style={{ left: pct(y * 12) }}>
+                {y}
+              </span>
+            ))}
+          </span>
+        </div>
       </div>
       {legend && (
         <ul className="lanes-legend">
@@ -77,8 +88,8 @@ export function TimelineLanes({ from, to, ids, caption, className, legend }: Pro
           <li><span className="lanes-swatch lane-venture" /> Venture</li>
           <li><span className="lanes-swatch lane-life is-unspecified" /> Part-time, dates not specified</li>
           <li><span className="lanes-swatch is-diamond" /> Award / milestone</li>
-          <li><span className="lanes-swatch is-year" /> Dashed ends: only the year is given</li>
-          <li><span className="lanes-swatch is-ongoing" /> Fading end: ongoing</li>
+          <li><span className="lanes-swatch lane-study is-year" /> Lighter: only the year is given</li>
+          <li><span className="lanes-swatch lane-work is-ongoing" /> Fading end: ongoing</li>
         </ul>
       )}
     </figure>

@@ -13,13 +13,3 @@ export function useMediaQuery(query: string): boolean {
 }
 
 export const usePrefersReducedMotion = () => useMediaQuery('(prefers-reduced-motion: reduce)');
-
-/**
- * The pinned horizontal journey is used only on large, tall-enough screens
- * with motion allowed. Everything else gets the natural vertical layout.
- */
-export function useJourneyMode(): 'horizontal' | 'stacked' {
-  const large = useMediaQuery('(min-width: 1024px) and (min-height: 620px)');
-  const reduced = usePrefersReducedMotion();
-  return large && !reduced ? 'horizontal' : 'stacked';
-}

@@ -13,14 +13,18 @@ npm run preview   # serve the production build
 
 ## How it works
 
-| Screen | Behaviour |
-|---|---|
-| Desktop (≥1024px wide, ≥620px tall) | Pinned journey. Vertical scrolling moves the chapters sideways, 1px for 1px. Native scrolling handles mouse wheels, trackpads and the keyboard, and horizontal trackpad swipes also work. Scroll progress controls the active chapter, the vehicle, the wheel rotation and the plane's flight arc. |
-| Tablet, mobile, or reduced motion | The same chapters stacked vertically in the same order. A slim sticky bar shows the current chapter and vehicle, and each chapter shows its vehicle as a static illustration. |
+The whole site is one horizontal track that fills the browser window. The page never scrolls vertically.
 
-The page is laid out as: hero and client logos, the journey (7 chapters), then **Work**, **Awards & Achievements**, **Education** and **Contact**. These sections give direct access to every project, so visitors never have to finish the journey. The header links (Journey, Work, Awards, Education, Contact) jump straight to these sections.
+**About → My Journey → 01 Vietnam → 02 Move to Canada → 03 Humber College → 04 Yon Crochet → 05 Full-time designer → 06 BMO Launch Me → Work → Awards → Education → Contact**
 
-Case studies and award details open in an accessible panel built on the native `<dialog>` element. It traps focus, closes with Escape, the backdrop or the Back/Close buttons, and returns focus to the button that opened it. The journey stays where it was when the panel closes.
+- **Mouse wheel / trackpad:** vertical wheel input moves the track sideways with smooth easing. Horizontal trackpad swipes and touch swipes scroll natively. With a mouse, you can also click and drag.
+- **Keyboard:** ← → (or ↑ ↓) move along the track, PageUp/PageDown and Space jump between destinations, Home/End go to the start or end.
+- **Navigation:** the fixed top menu (About, Journey, Work, Awards, Education, Contact) jumps straight to a destination. The bottom route bar has ‹ › buttons, numbered chapter markers, and the vehicle riding along the line.
+- **Vehicle:** motorcycle → airplane → TTC bus → car, each with the same face sticker. Its position, type and wheel spin all come from the track's scroll position.
+- **Case studies and award details** open in an accessible panel (native `<dialog>`) that scrolls on its own. Escape or Back closes it, focus returns to the button that opened it, and the track stays where it was.
+- **Phones:** still horizontal. Each column becomes a swipeable page, and any column taller than the screen scrolls inside itself.
+- **Reduced motion:** movement jumps instead of easing, and animations are switched off.
+- Links like `…/#work` or `…/#contact` open directly at that destination.
 
 ## Editing content
 
@@ -28,12 +32,13 @@ Case studies and award details open in an accessible panel built on the native `
 |---|---|
 | All original portfolio wording (hero, logos, 5 projects, 3 awards, 2 education entries, contact, footer) | `src/content/portfolio.ts` |
 | Dates and parallel timeline lanes | `src/content/timeline.ts` |
-| Journey chapters (order, titles, vehicle, which items appear, lane window) | `src/content/journey.ts` |
+| Journey chapters (order, titles, vehicle, which cards appear, timeline window) | `src/content/journey.ts` |
+| Order of all destinations (About, Journey, chapters, Work, …) | `src/components/Destinations.tsx` |
 | Colours, type scale, spacing, outline weights | `src/styles/tokens.css` and `src/components/vehicles/tokens.ts` |
 | Vehicles and small illustrations (SVG components) | `src/components/vehicles/` |
 
 - **Add a case-study section:** add `{ heading, body }` to a project's `extraSections` in `portfolio.ts`. Add `placeholder: true` to show it as a clearly marked draft.
-- **Replace the school-project placeholders:** in `journey.ts`, change the two `kind: 'placeholder'` items in the `humber` chapter. To show real work, add a new entry to `projects` in `portfolio.ts` and reference it with `{ kind: 'project', id: '…' }`.
+- **Replace the school-project placeholders:** in `journey.ts`, change the `kind: 'placeholder'` item in the `humber` chapter. To show real work, add a new entry to `projects` in `portfolio.ts` and reference it with `{ kind: 'project', id: '…' }`.
 - **Add Kinton Ramen dates later:** set `start` and `end` on the `kinton` activity in `timeline.ts`, and change `precision` to `'month'`.
 
 ## Replacing assets
@@ -50,7 +55,7 @@ Case studies and award details open in an accessible panel built on the native `
 ## Information not supplied by the original site
 
 - **Kinton Ramen:** no dates or responsibilities. It is shown as a part-time milestone alongside Humber, with no dates and no case study. Its timeline bar is hatched and labelled as unspecified.
-- **Humber school projects:** none supplied. They appear as two labelled editable placeholders.
+- **Humber school projects:** none supplied. They appear as one labelled "School projects" placeholder card with three empty image tiles.
 - **Graduation:** no exact date. It is shown as the end of the 2024–2025 Humber program.
 - **Relocation to Canada:** no date. The travel chapter is undated.
 - **Cherries Code location:** not stated. No location is shown for it.

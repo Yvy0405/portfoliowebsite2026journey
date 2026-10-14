@@ -46,7 +46,7 @@ export const activities: Activity[] = [
   { id: 'tn-ebike', label: 'TN Ebike', lane: 'work', dateLabel: '1/2024 - 5/2025', precision: 'month', start: '2024-01', end: '2025-05', ref: { type: 'project', id: 'tn-ebike' } },
   { id: 'kinton', label: 'Kinton Ramen', lane: 'life', dateLabel: 'Dates not specified', precision: 'unspecified', displaySpanOf: 'humber' },
   { id: 'yon-crochet', label: 'Yon Crochet', lane: 'venture', dateLabel: '4/2025 - Present', precision: 'month', start: '2025-04', end: 'present', ref: { type: 'project', id: 'yon-crochet' } },
-  { id: 'graduation', label: 'Graduation', lane: 'study', dateLabel: 'End of 2024–2025 program', precision: 'year', start: '2025-12', point: true, ref: { type: 'education', id: 'humber' } },
+  { id: 'graduation', label: 'Graduation', lane: 'study', dateLabel: '2025 · end of program', precision: 'year', start: '2025-12', point: true, ref: { type: 'education', id: 'humber' } },
   { id: 'longo', label: 'Longo grant', lane: 'award', dateLabel: 'Aug 2025', precision: 'month', start: '2025-08', point: true, ref: { type: 'award', id: 'longo' } },
   { id: 'alarm-guard', label: 'Alarm Guard Security', lane: 'work', dateLabel: '10/2025 - Present', precision: 'month', start: '2025-10', end: 'present', ref: { type: 'project', id: 'alarm-guard' } },
   { id: 'senior-protection', label: 'Senior Protection', lane: 'work', dateLabel: '10/2025 - Present', precision: 'month', start: '2025-10', end: 'present', ref: { type: 'project', id: 'senior-protection' } },

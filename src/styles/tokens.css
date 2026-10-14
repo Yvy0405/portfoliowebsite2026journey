@@ -12,6 +12,8 @@
 
   --blue: #2f6bff;
   --blue-ink: #1f4fd1; /* text-safe blue */
+  --coral-ink: #c8392b; /* text-safe coral */
+  --mint-ink: #0e7351; /* text-safe mint */
   --blue-tint: #e8efff;
   --coral: #ff6b5b;
   --coral-tint: #ffe9e6;
@@ -46,16 +48,16 @@
 
   /* Shape */
   --radius-sm: 6px;
-  --radius: 10px;
+  --radius: 14px;
   --outline-ui: 2px; /* buttons, focus */
   --outline-art: 5px; /* illustrations (SVG units, see vehicles/tokens.ts) */
 
   /* Layout */
   --container: 1160px;
   --gutter: clamp(16px, 4vw, 40px);
-  --header-h: 64px;
-  --hud-h: 60px;
-  --road-h: 128px;
+  --header-h: 76px;
+  --bar-h: 140px;
+  --lane-label: 150px;
 
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
